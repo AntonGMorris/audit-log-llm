@@ -104,6 +104,24 @@ npx audit-log-llm prune
 
 Storage path defaults to `./audit.db.json` or `AUDIT_DB` env.
 
+## Example — the analyst CLI
+
+```
+$ npx audit-log-llm query --confidence-lt 0.7 --since 24h
+id           system              conf     £/call    latency   created
+-----------  ------------------  -------  --------  --------  --------------------
+a_9k2f7a     email-drafter          0.62    0.0021    843ms   2026-07-18T14:22:05Z
+a_8mp3b1     support-summariser     0.58    0.0018    712ms   2026-07-18T13:04:57Z
+a_7nq0c8     invoice-extractor      0.68    0.0024   1102ms   2026-07-18T11:47:22Z
+
+3 records
+
+$ npx audit-log-llm forget-user u_123
+forgot user u_123: removed 47 records
+```
+
+Point a DSAR response at the `forget-user` output line — you now have literal audit evidence that the erasure completed and how many records it covered.
+
 ## What a record looks like
 
 ```json
