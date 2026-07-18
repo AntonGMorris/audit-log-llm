@@ -147,6 +147,20 @@ Bring your own by implementing the `AuditStore` interface. SQLite + Postgres ada
 - v0.1 has no built-in UI. Query from the CLI or build on top of `AuditStore`.
 - Wrapping a function is only as good as the extract function. If your model returns unusual metadata, pass `extract` explicitly.
 
+## Part of the AI-governance stack
+
+This repo is one of five that ship together as a coherent AI-governance stack. Each is standalone; they compose.
+
+| Repo | What it is |
+|---|---|
+| [`companies-house-mcp`](https://github.com/AntonGMorris/companies-house-mcp) | Production-grade MCP server for the UK Companies House API. |
+| [`prompt-injection-lab`](https://github.com/AntonGMorris/prompt-injection-lab) | Automated red-team suite. Fires known injection payloads at any AI endpoint. |
+| [`hitl-review`](https://github.com/AntonGMorris/hitl-review) | Drop-in human-in-the-loop review queue. |
+| [`audit-log-llm`](https://github.com/AntonGMorris/audit-log-llm) | **You are here.** GDPR-friendly structured audit logging for LLM calls. |
+| [`lead-qual-agent`](https://github.com/AntonGMorris/lead-qual-agent) | Example agent that composes all of the above. |
+
+Built and maintained by [Anton Morris](https://antonmorris.co.uk).
+
 ## License
 
 MIT. See `LICENSE`.
