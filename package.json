@@ -1,0 +1,59 @@
+{
+  "name": "audit-log-llm",
+  "version": "0.1.0",
+  "description": "Structured audit logging for LLM calls. GDPR-friendly, queryable, one weekend to add. Wrap any LLM call to capture model, prompt version, input, output, confidence, cost, and session — with retention limits and right-to-erasure by session ID built in.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Anton Morris",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AntonGMorris/audit-log-llm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AntonGMorris/audit-log-llm/issues"
+  },
+  "homepage": "https://github.com/AntonGMorris/audit-log-llm#readme",
+  "keywords": [
+    "llm",
+    "audit",
+    "logging",
+    "gdpr",
+    "compliance",
+    "observability",
+    "governance",
+    "ai"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "audit-log-llm": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.17.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
