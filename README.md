@@ -21,7 +21,7 @@ Every commercial LLM observability platform charges £50–£500/mo per project 
 ## Install
 
 ```bash
-npm install audit-log-llm
+npm install @antongmorris/audit-log-llm
 ```
 
 Requires Node.js 20+.
@@ -29,7 +29,7 @@ Requires Node.js 20+.
 ## Quick start
 
 ```ts
-import { AuditLog, FileStore } from "audit-log-llm";
+import { AuditLog, FileStore } from "@antongmorris/audit-log-llm";
 
 const audit = new AuditLog({
   storage: new FileStore("./audit.db.json"),

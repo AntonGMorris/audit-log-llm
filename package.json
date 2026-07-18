@@ -1,5 +1,5 @@
 {
-  "name": "audit-log-llm",
+  "name": "@antongmorris/audit-log-llm",
   "version": "0.1.0",
   "description": "Structured audit logging for LLM calls. GDPR-friendly, queryable, one weekend to add. Wrap any LLM call to capture model, prompt version, input, output, confidence, cost, and session — with retention limits and right-to-erasure by session ID built in.",
   "type": "module",
