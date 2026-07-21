@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { AuditLog } from "./audit.js";
-import { FileStore } from "./storage/file.js";
+import { openStore } from "./storage/index.js";
 import type { QueryFilter } from "./types.js";
 
 const DEFAULT_DB = process.env.AUDIT_DB ?? "./audit.db.json";
@@ -12,7 +12,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const audit = new AuditLog({ storage: new FileStore(DEFAULT_DB) });
+  const audit = new AuditLog({ storage: openStore(DEFAULT_DB) });
 
   switch (command) {
     case "query":
@@ -44,6 +44,8 @@ Usage:
   audit-log-llm prune
 
 Storage path: AUDIT_DB env (default: ./audit.db.json)
+  *.json  → atomic JSON file store
+  *.db / *.sqlite → SQLite store (Node >= 22.5, built-in node:sqlite)
 `);
 }
 

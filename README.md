@@ -8,7 +8,7 @@
 
 Wrap any LLM call with one function. Every call — model, prompt version, input, output, confidence, cost, session, user, timestamp — lands in a structured store you own. Query it, filter it, export it, or wipe a customer's data on demand. Zero native dependencies, works out of the box, self-hosts anywhere Node runs.
 
-> **Status: alpha (v0.1).** Core wrapper, in-memory + JSON-file storage, query API, GDPR erasure by session/user, retention pruning, reviewer CLI. SQLite/Postgres backends and a Next.js query UI on the roadmap.
+> **Status: v0.2.** Core wrapper, in-memory + JSON-file + **SQLite** storage, query API with indexed SQL filtering, GDPR erasure by session/user, retention pruning, reviewer CLI. Postgres backend and a Next.js query UI on the roadmap.
 
 ---
 
@@ -149,22 +149,28 @@ The wrapper reads confidence, cost, latency, and model name from the return valu
 
 ## Storage adapters
 
-- **`MemoryStore`** — everything in-process. Fine for tests and single-run scripts.
-- **`FileStore("./audit.db.json")`** — atomic JSON file with per-write flush. Zero native dependencies. Good for single-instance deployments up to a few tens of thousands of records.
+Three ship built-in:
 
-Bring your own by implementing the `AuditStore` interface. SQLite + Postgres adapters land in v0.2 for higher volume.
+- **`MemoryStore`** — everything in-process. Fine for tests and single-run scripts.
+- **`FileStore("./audit.db.json")`** — atomic JSON file with per-write flush. Good for single-instance deployments up to a few tens of thousands of records.
+- **`SqliteStore("./audit.db")`** — real database persistence via Node's built-in `node:sqlite` (Node ≥ 22.5). WAL mode, and queries compile to indexed SQL (`created_at`, `user_id`, `session_id`, `system`) instead of scanning every record. Still zero dependencies — nothing native to compile.
+
+The CLI picks the backend by extension: `.json` → FileStore, `.db`/`.sqlite` → SqliteStore. Set `AUDIT_DB=./audit.db` and you're on SQLite. In code, `openStore(path)` does the same.
+
+Bring your own by implementing the `AuditStore` interface (four methods: `append`, `get`, `query`, `deleteWhere`). Postgres adapter lands in a future release.
 
 ## Roadmap
 
-- **v0.2** — SQLite + Postgres storage adapters. Same interface — swap without touching your call sites.
-- **v0.3** — Next.js query UI. Same data, browser instead of terminal.
-- **v0.4** — Export presets — CSV, JSON, and a purpose-built GDPR subject-report format that satisfies most DSAR responses out of the box.
-- **v0.5** — Cost aggregation views (£ per user, per system, per day) and per-model breakdowns.
+- **v0.3** — Postgres storage adapter for multi-instance deployments. Same interface — swap without touching your call sites.
+- **v0.4** — Query UI. Same data, browser instead of terminal.
+- **v0.5** — Export presets — CSV, JSON, and a purpose-built GDPR subject-report format that satisfies most DSAR responses out of the box.
+- **v0.6** — Cost aggregation views (£ per user, per system, per day) and per-model breakdowns.
 
 ## Honest caveats
 
-- The `FileStore` reads the whole file for each query — that's fine up to tens of thousands of records but not for high-throughput production. Postgres backend coming in v0.2.
-- v0.1 has no built-in UI. Query from the CLI or build on top of `AuditStore`.
+- The `FileStore` reads the whole file for each query — fine up to tens of thousands of records. Switch to `SqliteStore` beyond that; multi-instance across hosts still wants the Postgres backend (v0.3).
+- `SqliteStore` needs Node ≥ 22.5 (it uses the built-in `node:sqlite`). On Node 20, use `FileStore`.
+- No built-in UI yet. Query from the CLI or build on top of `AuditStore`.
 - Wrapping a function is only as good as the extract function. If your model returns unusual metadata, pass `extract` explicitly.
 
 ## Part of the AI-governance stack
